@@ -1,0 +1,36 @@
+freedmrmonitor2:
+    container_name: freedmrmonitor2
+    cpu_shares: 512
+    depends_on:
+        - freedmr
+    ports:
+        - '9000:9000/tcp'
+    image: 'gitlab.hacknix.net:5050/freedmr/freedmrmonitor2/freedmrmonitor2:monitor-development-latest'
+    restart: "unless-stopped"
+    networks:
+       app_net:
+         ipv4_address: 172.16.238.20
+    read_only: "true"
+    logging:
+          driver: json-file
+
+
+freedmrmonpache:
+    container_name: freedmrmonapache
+    cpu_shares: 512
+    depends_on:
+         - freedmrmonitor2
+    volumes:
+    #    - '/var/www/html/:/var/www/html/'
+    #    - '/var/www/html/images/:/var/www/html/images/'
+         - '/etc/freedmr/ph.jpg:/var/www/html/img/logo.png'
+    ports:
+        - '80:80/tcp'
+    image: 'gitlab.hacknix.net:5050/freedmr/freedmrmonitor2/freedmrmonitor2:apache-development-latest'
+    restart: "unless-stopped"
+    networks:
+       app_net:
+        ipv4_address: 172.16.238.30
+
+    logging:
+          driver: json-file
